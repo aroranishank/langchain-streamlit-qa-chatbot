@@ -1,7 +1,6 @@
 import streamlit as st
 import openai
 from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -23,9 +22,9 @@ prompt = ChatPromptTemplate.from_messages(
 )
 
 def generate_response(question, api_key, llm, temperature, max_tokens):
-    # openai.api_key=api_key
-    # llm = ChatOpenAI(model=llm)
-    llm = ChatGoogleGenerativeAI(model=llm, google_api_key=api_key)
+    openai.api_key=api_key
+    llm = ChatOpenAI(model=llm)
+    #llm = ChatGoogleGenerativeAI(model=llm, google_api_key=api_key)
     output_parser = StrOutputParser()
     chain = prompt | llm | output_parser
     answer = chain.invoke({"question": question})
@@ -37,10 +36,10 @@ st.title("Enhanced Q&A Chatbot With Gemini")
 
 ## Sidebar for settings
 st.sidebar.title("Settings")
-api_key = st.sidebar.text_input("Enter your Gemini API Key: ", type="password")
+api_key = st.sidebar.text_input("Enter your OpenAI API Key: ", type="password")
 
 ## Dropdown 
-llm = st.sidebar.selectbox("Select an Gemini Model", ["gemini-1.5-pro", "gemini-1.5-flash"])
+llm = st.sidebar.selectbox("Select OpenAI Model", ["gpt-4o", "gpt-4-turbo", "gpt-4"])
 
 ## Adjust response parameters
 temperature = st.sidebar.slider("Temperature", min_value=0.0, max_value=1.0, value=0.7)
